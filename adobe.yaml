@@ -1,0 +1,56 @@
+- name: install adobe
+  gather_facts: yes
+  hosts: localhost
+  tasks:
+    - name: Get Windows host IP
+      set_fact:
+        host_ip: "{{ ansible_host | default(ansible_default_ipv4.address) }}"
+    - name: Set fact for installed adobe  version
+      set_fact:
+       adobe_current_version: "12.10.10.1"
+    - name: Set fact for downloaded adobe  version
+      set_fact:
+       adobe_installer_version: "12.20.10.1"
+    - name: Compare Adobe versions
+      set_fact:
+        adobe_comparison: >-
+          {% if adobe_installer_version is version(adobe_current_version, '>') %}
+             greater
+          {% elif adobe_installer_version is version(adobe_current_version, '<') %}
+             lesser
+          {% else %}
+            {{ adobe_installer_version }} and {{ adobe_current_version }} are the same
+          {% endif %}
+      when:
+        - adobe_current_version != ""
+
+    - name: print
+      debug:
+          msg: "{{ adobe_comparison }}"
+      when:
+        - adobe_current_version != ""
+
+    - name: print for installation
+      debug:
+          msg: "package will be installed"
+      when: adobe_current_version != "" and adobe_comparison is search ("greater")
+      register: upgrade_status
+    - name: Set upgrade status fact
+      set_fact:
+        upgrade_status: >-
+          {% if upgrade_result is defined and upgrade_result.changed %}
+          yes
+          {% else %}
+          na
+          {% endif %}
+
+    - name: create csv report
+      lineinfile:
+        path: /tmp/report.csv
+        line: hostip,package,currentversion,installed version,upgraded,date
+        create: yes
+
+    - name: add entries in the csv file
+      lineinfile:
+        path: /tmp/report.csv
+        line: "{{ host_ip }},Adobe,{{ adobe_current_version | trim | default('not installed', true) }},{{ adobe_installer_version | trim  }},{{ upgrade_status | default('na') }},{{ ansible_date_time.date }}"
