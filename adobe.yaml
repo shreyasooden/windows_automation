@@ -32,7 +32,7 @@
 
     - name: print for installation
       debug:
-          msg: "package will be installed"
+          msg: "Adobe package will be installed"
       when: adobe_current_version != "" and adobe_comparison is search ("greater")
       register: upgrade_status
     - name: Set upgrade status fact
