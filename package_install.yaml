@@ -2,9 +2,9 @@
   gather_facts: yes
   hosts: localhost
   tasks:
-    - import_playbook: chrome.yaml
+    - include_tasks: chrome.yaml
       when: "'chrome' in package_name"
-    - import_playbook: adobe.yaml
+    - include_tasks: adobe.yaml
       when: "'adobe' in package_name"
 
     
