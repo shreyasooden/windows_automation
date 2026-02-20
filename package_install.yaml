@@ -1,0 +1,9 @@
+- name: install chrome
+  gather_facts: yes
+  hosts: localhost
+  tasks:
+    - import_playbook: chrome.yaml
+      when: package_name == "chrome"
+    - import_playbook: adobe.yaml
+      when: package_name == "adobe"
+    
