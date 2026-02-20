@@ -49,9 +49,11 @@
         path: /tmp/report.csv
         line: hostip,package,currentversion,installed version,upgraded,date
         create: yes
+      delegate_to: localhost
 
     - name: add entries in the csv file
       lineinfile:
         path: /tmp/report.csv
         line: "{{ host_ip }},chrome,{{ chrome_current_version | trim | default('not installed', true) }},{{ chrome_installer_version | trim  }},{{ upgrade_status | default('na') }},{{ ansible_date_time.date }}"
-
+      delegate_to: localhost
+  
