@@ -1,7 +1,4 @@
-- name: install adobe
-  gather_facts: yes
-  hosts: localhost
-  tasks:
+
     - name: Get Windows host IP
       set_fact:
         host_ip: "{{ ansible_host | default(ansible_default_ipv4.address) }}"
