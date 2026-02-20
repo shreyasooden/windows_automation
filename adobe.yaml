@@ -44,13 +44,4 @@
           na
           {% endif %}
 
-    - name: create csv report
-      lineinfile:
-        path: /tmp/report.csv
-        line: hostip,package,currentversion,installed version,upgraded,date
-        create: yes
 
-    - name: add entries in the csv file
-      lineinfile:
-        path: /tmp/report.csv
-        line: "{{ host_ip }},Adobe,{{ adobe_current_version | trim | default('not installed', true) }},{{ adobe_installer_version | trim  }},{{ upgrade_status | default('na') }},{{ ansible_date_time.date }}"
