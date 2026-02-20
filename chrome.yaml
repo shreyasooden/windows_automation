@@ -32,7 +32,7 @@
 
     - name: print for installation
       debug:
-          msg: "package will be installed"
+          msg: "chrome package will be installed"
       when: chrome_current_version != "" and chrome_comparison is search ("greater")
       register: upgrade_status
     - name: Set upgrade status fact
